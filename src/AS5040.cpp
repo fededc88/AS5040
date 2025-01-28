@@ -4,12 +4,24 @@
 #if defined (ARDUINO_AVR_UNO)
 enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs, uint8_t CSpin)
 {
-    enum AS5040_RC rc; /* return command */
+    enum AS5040_RC rc = 0; /* return command */
 
     AS5040Class::pSPI = pSPI;
     AS5040Class::SPIs = SPIs;
     AS5040Class::CSpin = CSpin;
 
+    return rc;
+}
+
+enum AS5040_RC AS5040Class::begin(void)
+{
+    enum AS5040_RC rc; /* return command */
+
+    AS5040Class::pSPI = &SPI;
+    AS5040Class::SPIs = SPISettings(AS5040_CLKAREAD, MSBFIRST,SPI_MODE1);
+    AS5040Class::CSpin = 10;
+
+    //TODO: to be implemented
     return rc;
 }
 #else

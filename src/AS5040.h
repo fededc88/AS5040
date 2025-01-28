@@ -23,6 +23,7 @@ class AS5040Class
 public:
 #if defined (ARDUINO_AVR_UNO)
     enum AS5040_RC begin(SPIClass *pSPI, SPISettings SPIs, uint8_t CSpin);
+    enum AS5040_RC begin(void);
 #else
     enum AS5040_RC begin();
 #endif
