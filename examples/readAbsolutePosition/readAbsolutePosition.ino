@@ -1,11 +1,15 @@
 
-#include "SPI.h"
 #include "AS5040.h"
 
-SPIClass spi;
+
+AS5040Class AS5040;
+
+
 
 void setup() {
-    spi.begin();
+
+    SPI.begin();
+    AS5040.begin(&SPI, SPISettings(AS5040_CLKAREAD, MSBFIRST,SPI_MODE1));
 
 }
 
