@@ -36,10 +36,13 @@ enum AS5040_RC AS5040Class::begin()
 
 uint16_t AS5040Class::readAbsolutePosition(void)
 {
-    uint16_t val;
-    //TODO:
+    uint16_t angle;
 
-    return val;
+    struct AS5040_AAPD aapd;
+
+    angle = _write_read(0x00);
+
+    return angle;
 }
 
 uint16_t AS5040Class::_write_read(uint16_t write_val)
