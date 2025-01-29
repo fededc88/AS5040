@@ -47,6 +47,7 @@ uint16_t AS5040Class::_write_read(uint16_t write_val)
 
     uint16_t read_val = 0;
     
+#if defined (ARDUINO_AVR_UNO)
     // Before using SPI.transfer() or asserting chip select pins,
     // this function is used to gain exclusive access to the SPI bus
     // and configure the correct settings.
@@ -68,6 +69,10 @@ uint16_t AS5040Class::_write_read(uint16_t write_val)
     // After performing a group of transfers and releasing the chip select
     // signal, this function allows others to access the SPI bus
     pSPI->endTransaction();
+#else
+    /* User should implement a different SPI driver here */
+
+#endif
 
     return read_val;
 }
