@@ -34,13 +34,16 @@ enum AS5040_RC AS5040Class::begin()
 }
 #endif
 
-uint16_t AS5040Class::readAbsolutePosition(void)
+float AS5040Class::readAbsolutePosition(void)
 {
-    uint16_t angle;
+    union AS5040_AAPD aapd;
+    float angle;
 
-    struct AS5040_AAPD aapd;
+    aapd.val.uint16 = _write_read(0x00);
 
-    angle = _write_read(0x00);
+    // TODO: Check Status
+
+    // TODO: counts to angle
 
     return angle;
 }
@@ -74,7 +77,6 @@ uint16_t AS5040Class::_write_read(uint16_t write_val)
     pSPI->endTransaction();
 #else
     /* User should implement a different SPI driver here */
-
 #endif
 
     return read_val;
