@@ -12,10 +12,18 @@ AS5040Class::AS5040Class(uint8_t CSpin, uint8_t CLKpin, uint8_t MISOpin, uint8_t
 
 enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs)
 {
-    enum AS5040_RC rc = 0; /* return command */
+    enum AS5040_RC rc = AS5040_OK; /* return command */
+
+    struct AS5040_OTP otp;
 
     AS5040Class::pSPI = pSPI;
     AS5040Class::SPIs = SPIs;
+
+    otp.val.uint16 = 0;
+    if( nonPermanentProgram(otp) )
+    {
+        rc = AS5040_FAIL;
+    }
 
     return rc;
 }
