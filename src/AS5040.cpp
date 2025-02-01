@@ -115,12 +115,10 @@ uint16_t AS5040Class::_write_read(uint16_t write_val)
     // take the SS pin low to select the chip:
     digitalWrite(_CSpin, LOW);
 
-    delay(1); //The delay should be 500ns
+    delayMicroseconds (1); //The delay should be 500ns
 
     // send in the address and value via SPI:
     read_val = pSPI->transfer16(write_val);
-
-    delay(1); //The delay should be 500ns
 
     // take the SS pin high to de-select the chip:
     digitalWrite(_CSpin, HIGH);
