@@ -70,6 +70,9 @@ enum AS5040_RC AS5040Class::nonPermanentProgram(struct AS5040_OTP otp_val)
 
 #if defined (ARDUINO_AVR_UNO)
 
+    pinMode(_CLKpin, OUTPUT);  //configure pin as output   
+    pinMode(_PROGpin, OUTPUT);  //configure pin as output  
+
     // Enable programming mode:
     digitalWrite(_CSpin, LOW);
     delayMicroseconds (1);
@@ -77,6 +80,8 @@ enum AS5040_RC AS5040Class::nonPermanentProgram(struct AS5040_OTP otp_val)
     digitalWrite(_PROGpin, HIGH);
     delayMicroseconds (3); /* tprog-enable > 2us */
     digitalWrite(_CSpin, HIGH);
+    delayMicroseconds (3); /* tdata in > 2us */
+
     //ProgEn! Ready to programm
     
     pSPI->beginTransaction(SPISettings(AS5040_CLKAREAD, MSBFIRST, SPI_MODE0));
@@ -90,7 +95,7 @@ enum AS5040_RC AS5040Class::nonPermanentProgram(struct AS5040_OTP otp_val)
 
     digitalWrite(_CSpin, LOW);
     digitalWrite(_PROGpin, LOW);
-    digitalWrite(_CLKpin, HIGH);
+    digitalWrite(_CLKpin, LOW);
     delayMicroseconds (5);
     digitalWrite(_CSpin, HIGH); // Ready for reads!
 
