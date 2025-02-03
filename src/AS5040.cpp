@@ -58,8 +58,10 @@ float AS5040Class::readAbsolutePosition(void)
     aapd.val.uint16 = _write_read(0x00);
 
     // TODO: Check Status
+    // TODO: Check Parity
 
     // TODO: counts to angle
+    angle = ((float) aapd.bit.angle) / 1024 * 360;
 
     return angle;
 }
@@ -70,38 +72,27 @@ enum AS5040_RC AS5040Class::nonPermanentProgram(struct AS5040_OTP otp_val)
 
 #if defined (ARDUINO_AVR_UNO)
 
-    pinMode(_CLKpin, OUTPUT);  //configure pin as output   
-    pinMode(_PROGpin, OUTPUT);  //configure pin as output  
+    if ( _enable_prog() )
+    {
+        rc = AS5040_FAIL;
+    }
+    else
+    {
+        //ProgEn! Ready to programm
 
-    // Enable programming mode:
-    digitalWrite(_CSpin, LOW);
-    delayMicroseconds (1);
-    digitalWrite(_CLKpin, LOW);
-    digitalWrite(_PROGpin, HIGH);
-    delayMicroseconds (3); /* tprog-enable > 2us */
-    digitalWrite(_CSpin, HIGH);
-    delayMicroseconds (3); /* tdata in > 2us */
+        pSPI->beginTransaction(SPISettings(AS5040_CLKAREAD, MSBFIRST, SPI_MODE0));
 
-    //ProgEn! Ready to programm
-    
-    pSPI->beginTransaction(SPISettings(AS5040_CLKAREAD, MSBFIRST, SPI_MODE0));
+        // Write OTP
+        pSPI->transfer16(otp_val.val.uint16);
 
-    // Write OTP
-    pSPI->transfer16(otp_val.val.uint16);
+        pSPI->endTransaction();
 
-    // After performing a group of transfers and releasing the chip select
-    // signal, this function allows others to access the SPI bus
-    pSPI->endTransaction();
-
-    digitalWrite(_CSpin, LOW);
-    digitalWrite(_PROGpin, LOW);
-    digitalWrite(_CLKpin, LOW);
-    delayMicroseconds (5);
-    digitalWrite(_CSpin, HIGH); // Ready for reads!
+        _disable_prog();
+    }
 
 #else
     /* User should implement a different SPI driver here */
-    #warning Implement _write_read()
+    #warning Implement _nonPermanentProgram()
 #endif
     return rc;
 }
@@ -120,7 +111,7 @@ uint16_t AS5040Class::_write_read(uint16_t write_val)
     // take the SS pin low to select the chip:
     digitalWrite(_CSpin, LOW);
 
-    delayMicroseconds (1); //The delay should be 500ns
+    delayMicroseconds (10); //The delay should be 500ns
 
     // send in the address and value via SPI:
     read_val = pSPI->transfer16(write_val);
@@ -137,6 +128,65 @@ uint16_t AS5040Class::_write_read(uint16_t write_val)
 #endif
 
     return read_val;
+}
+
+
+enum AS5040_RC AS5040Class::_enable_prog(void)
+{
+    enum AS5040_RC rc = AS5040_OK;
+
+#if defined (ARDUINO_AVR_UNO)
+    
+    /* AVR shares GPIOs with peripherals in a way where they don't need to be
+     * reconfigured for DIO but they can overwrite the value. If you are
+     * migrating this driver to another target don't forget to reconfigure GPIOs
+     */
+
+    /* Enable programming procedure */
+    digitalWrite(_CSpin, LOW);
+    delayMicroseconds(1);
+    digitalWrite(_PROGpin, HIGH);
+    delayMicroseconds (3); /* tprog-enable > 2us */
+
+    if(digitalRead(_PROGpin) == LOW)
+    {
+        rc = AS5040_FAIL;
+    }
+
+    digitalWrite(_CSpin, HIGH);
+    delayMicroseconds (3); /* tdata in > 2us */
+
+    /* Ready for program! */
+
+#else
+    /* User should implement a different SPI driver here */
+    #warning Implement _enable_prog()
+
+#endif
+
+    return rc;
+}
+
+enum AS5040_RC AS5040Class::_disable_prog(void)
+{
+    enum AS5040_RC rc = AS5040_OK;
+
+#if defined (ARDUINO_AVR_UNO)
+
+    /* I write this 0 to pull down the MOSI(PROG) line  to finish programming */
+    _write_read(0);
+
+    delayMicroseconds (5);
+    digitalWrite(_CSpin, HIGH);
+
+    /* Ready for reads! */
+                                
+#else
+    /* User should implement a different SPI driver here */
+    #warning Implement _disable_prog()
+
+#endif
+    return rc;
 }
 
 // 

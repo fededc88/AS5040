@@ -37,7 +37,10 @@ private:
     SPISettings SPIs;
 #endif
 
+
     uint16_t _write_read(uint16_t write_val);
+    enum AS5040_RC _enable_prog(void);
+    enum AS5040_RC _disable_prog(void);
 
 };
 
