@@ -42,8 +42,7 @@ private:
     enum AS5040_RC _enable_prog(void);
     enum AS5040_RC _disable_prog(void);
     enum AS5040_RC _check_parity(union AS5040_AAPD val);
-    
-
+    enum AS5040_RC _check_status(union AS5040_AAPD last_read);
 };
 
 #endif

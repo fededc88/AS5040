@@ -62,6 +62,10 @@ float AS5040Class::readAbsolutePosition(void)
      {
          angle = 404;
      }
+    else if ( _check_status( aapd ) )
+    {
+         angle = 404;
+    }
     else
     {
         // TODO: Check Status
@@ -136,7 +140,6 @@ uint16_t AS5040Class::_write_read(uint16_t write_val)
 
     return read_val;
 }
-
 
 enum AS5040_RC AS5040Class::_enable_prog(void)
 {
@@ -213,6 +216,26 @@ enum AS5040_RC AS5040Class::_check_parity(union AS5040_AAPD last_read)
 
     if( parity != last_read.bit.parity)
         rc = AS5040_FAIL; 
+
+    return rc;
+}
+
+enum AS5040_RC AS5040Class::_check_status(union AS5040_AAPD last_read)
+{
+    enum AS5040_RC rc = AS5040_OK;
+
+    if(!last_read.bit.OCF)
+        rc = AS5040_FAIL;
+    else if( last_read.bit.COF )
+        rc = AS5040_FAIL;
+    else if ( last_read.bit.LIN )
+        rc = AS5040_FAIL;
+    else if ( last_read.bit.MagINCn && last_read.bit.MagDECn)
+        /* Magnetic Input Field invalid – out of range: <45mT or >75mT
+         * or missing magnet */
+        rc = AS5040_FAIL;
+
+
 
     return rc;
 }
