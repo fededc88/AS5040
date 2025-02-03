@@ -25,6 +25,8 @@ public:
 
     float readAbsolutePosition(void);
     enum AS5040_RC nonPermanentProgram(struct AS5040_OTP otp_val);
+    union AS5040_AAPD getStatus(void);
+
 
 private:
 #if defined (ARDUINO_AVR_UNO)

@@ -105,6 +105,16 @@ enum AS5040_RC AS5040Class::nonPermanentProgram(struct AS5040_OTP otp_val)
     return rc;
 }
 
+union AS5040_AAPD AS5040Class::getStatus(void)
+{
+    union AS5040_AAPD aapd_ghost = aapd;
+
+    aapd_ghost.bit.angle = 0;
+    aapd_ghost.bit.parity = 0;
+
+    return aapd_ghost;
+}
+
 uint16_t AS5040Class::_write_read(uint16_t write_val)
 {
 
