@@ -52,7 +52,6 @@ enum AS5040_RC AS5040Class::begin()
 
 float AS5040Class::readAbsolutePosition(void)
 {
-    union AS5040_AAPD aapd;
     float angle;
 
     aapd.val.uint16 = _write_read(0x00);

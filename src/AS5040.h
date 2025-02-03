@@ -36,7 +36,8 @@ private:
     SPIClass *pSPI;
     SPISettings SPIs;
 #endif
-
+    uint16_t counts = 1024;
+    union AS5040_AAPD aapd;
 
     uint16_t _write_read(uint16_t write_val);
     enum AS5040_RC _enable_prog(void);
