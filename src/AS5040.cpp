@@ -67,10 +67,8 @@ float AS5040Class::readAbsolutePosition(void)
     }
     else
     {
-        // TODO: Check Status
-
         // TODO: counts to angle
-        angle = ((float) aapd.bit.angle) / 1024 * 360;
+        angle = ((float) aapd.bit.angle) / counts * 360;
     }
 
     return angle;
