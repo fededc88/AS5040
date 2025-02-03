@@ -55,11 +55,11 @@ union AS5040_AAPD
     struct
     {
         uint16_t parity:1; /**> bit for transmission error detection of bits 1 to 15 */
-        uint16_t OCF:1; /**> Ofcet Compensation Finished */
-        uint16_t COF:1; /**> Cordic Overflow */
-        uint16_t LIN:1; /**> Linear Alarm */
-        uint16_t MagINCn:1; /**> Magnitud Increase */
         uint16_t MagDECn:1; /**> Magnitud Decrease */
+        uint16_t MagINCn:1; /**> Magnitud Increase */
+        uint16_t LIN:1; /**> Linear Alarm */
+        uint16_t COF:1; /**> Cordic Overflow */
+        uint16_t OCF:1; /**> Ofcet Compensation Finished */
         uint16_t angle:10; /**> Absolute angular position data */
     } bit;
 };

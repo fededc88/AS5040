@@ -19,6 +19,7 @@ enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs)
     AS5040Class::pSPI = pSPI;
     AS5040Class::SPIs = SPIs;
 
+    // TODO: default config
     otp.val.uint16 = 0;
     if( nonPermanentProgram(otp) )
     {
@@ -63,7 +64,7 @@ float AS5040Class::readAbsolutePosition(void)
      }
     else if ( _check_status( aapd ) )
     {
-         angle = 404;
+         angle = 405;
     }
     else
     {
@@ -241,8 +242,6 @@ enum AS5040_RC AS5040Class::_check_status(union AS5040_AAPD last_read)
         /* Magnetic Input Field invalid – out of range: <45mT or >75mT
          * or missing magnet */
         rc = AS5040_FAIL;
-
-
 
     return rc;
 }
