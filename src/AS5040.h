@@ -20,7 +20,7 @@ public:
     enum AS5040_RC begin(SPIClass *pSPI, SPISettings SPIs);
     enum AS5040_RC begin(void);
 #else
-    enum AS5040_RC begin();
+    enum AS5040_RC begin(void);
 #endif
 
     float readAbsolutePosition(void);
@@ -41,6 +41,8 @@ private:
     uint16_t _write_read(uint16_t write_val);
     enum AS5040_RC _enable_prog(void);
     enum AS5040_RC _disable_prog(void);
+    enum AS5040_RC _check_parity(union AS5040_AAPD val);
+    
 
 };
 

@@ -57,11 +57,18 @@ float AS5040Class::readAbsolutePosition(void)
 
     aapd.val.uint16 = _write_read(0x00);
 
-    // TODO: Check Status
-    // TODO: Check Parity
+    /* Check Parity */
+    if( _check_parity(aapd) )
+     {
+         angle = 404;
+     }
+    else
+    {
+        // TODO: Check Status
 
-    // TODO: counts to angle
-    angle = ((float) aapd.bit.angle) / 1024 * 360;
+        // TODO: counts to angle
+        angle = ((float) aapd.bit.angle) / 1024 * 360;
+    }
 
     return angle;
 }
@@ -186,6 +193,27 @@ enum AS5040_RC AS5040Class::_disable_prog(void)
     #warning Implement _disable_prog()
 
 #endif
+    return rc;
+}
+
+enum AS5040_RC AS5040Class::_check_parity(union AS5040_AAPD last_read)
+{
+    enum AS5040_RC rc = AS5040_OK;
+
+    uint8_t parity = 0;
+    uint16_t n;
+
+    n = last_read.val.uint16 & 0xFFFE;
+
+    while(n)
+    {
+        parity = !parity;
+        n = n & (n - 1);
+    }        
+
+    if( parity != last_read.bit.parity)
+        rc = AS5040_FAIL; 
+
     return rc;
 }
 
