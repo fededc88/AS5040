@@ -64,6 +64,10 @@ union AS5040_AAPD
     } bit;
 };
 
+/** 
+ * \brief A tiny Union to describe the One Time Programming register
+ *
+ */
 struct AS5040_OTP
 {
     union
