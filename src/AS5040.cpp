@@ -10,25 +10,6 @@ AS5040Class::AS5040Class(uint8_t CSpin, uint8_t CLKpin, uint8_t MISOpin, uint8_t
      _PROGpin = MOSIpin;
 }
 
-enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs)
-{
-    enum AS5040_RC rc = AS5040_OK; /* return command */
-
-    struct AS5040_OTP otp;
-
-    AS5040Class::pSPI = pSPI;
-    AS5040Class::SPIs = SPIs;
-
-    // TODO: default config
-    otp.val.uint16 = 0;
-    if( nonPermanentProgram(otp) )
-    {
-        rc = AS5040_FAIL;
-    }
-
-    return rc;
-}
-
 enum AS5040_RC AS5040Class::begin(void)
 {
     enum AS5040_RC rc; /* return command */
@@ -39,6 +20,34 @@ enum AS5040_RC AS5040Class::begin(void)
     //TODO: to be implemented
     return rc;
 }
+
+enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs)
+{
+    enum AS5040_RC rc = AS5040_OK; /* return command */
+
+    AS5040Class::pSPI = pSPI;
+    AS5040Class::SPIs = SPIs;
+
+    /* Use default AS5040 configuration */
+
+    return rc;
+}
+
+enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs, struct AS5040_OTP otp)
+{
+    enum AS5040_RC rc = AS5040_OK; /* return command */
+
+    AS5040Class::pSPI = pSPI;
+    AS5040Class::SPIs = SPIs;
+
+    if ( nonPermanentProgram(otp) )
+    {
+        rc = AS5040_FAIL;
+    }
+
+    return rc;
+}
+
 #else
 enum AS5040_RC AS5040Class::begin()
 {
@@ -89,7 +98,7 @@ enum AS5040_RC AS5040Class::nonPermanentProgram(struct AS5040_OTP otp_val)
     {
         //ProgEn! Ready to programm
 
-        pSPI->beginTransaction(SPISettings(AS5040_CLKAREAD, MSBFIRST, SPI_MODE0));
+        pSPI->beginTransaction(SPISettings(AS5040_CLKPROG, MSBFIRST, SPI_MODE0));
 
         // Write OTP
         pSPI->transfer16(otp_val.val.uint16);

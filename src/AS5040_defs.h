@@ -3,7 +3,7 @@
 
 #define AS5040_TCLKFE 500 /* Time between falling edge of CSn and first falling edge of CLK [nS] */
 #define AS5040_CLKPROG 250000 /* Write Data programming CLK max frequency [Hz] */
-#define AS5040_CLKAREAD 100000 /* Analog read CLK max frequency [Hz] */
+#define AS5040_CLKAREAD 1000000 /* Analog read CLK max frequency [Hz] */
 
 enum AS5040_RC
 {

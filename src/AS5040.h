@@ -14,13 +14,14 @@ class AS5040Class
 
 
 public:
-#if defined (ARDUINO_AVR_UNO)
-    AS5040Class(uint8_t CSpin, uint8_t CLKpin, uint8_t MISOpin, uint8_t MOSIpin);
 
+    enum AS5040_RC begin(void);
+
+#if defined (ARDUINO_AVR_UNO)
     enum AS5040_RC begin(SPIClass *pSPI, SPISettings SPIs);
-    enum AS5040_RC begin(void);
-#else
-    enum AS5040_RC begin(void);
+    enum AS5040_RC begin(SPIClass *pSPI, SPISettings SPIs, struct AS5040_OTP otp);
+
+    AS5040Class(uint8_t CSpin, uint8_t CLKpin, uint8_t MISOpin, uint8_t MOSIpin);
 #endif
 
     float readAbsolutePosition(void);
