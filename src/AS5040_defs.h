@@ -68,7 +68,7 @@ union AS5040_AAPD
  * \brief A tiny Union to describe the One Time Programming register
  *
  */
-struct AS5040_OTP
+union AS5040_OTP
 {
     union
     {
@@ -80,11 +80,14 @@ struct AS5040_OTP
         } byte;
     } val;
 
-    uint16_t Md:2; /**> Incremental mode (default: 0b00 = quadrature) */
-    uint16_t Div:2; /**> Incremental resolution (default: 0b00 = 10-bit */
-    uint16_t Indx:1; /**> Index bit witsh (default: 0b0 = 1LSB) */
-    uint16_t Zero:10; /**> Zero position (default: 0 [counts]) */
-    uint16_t CCW:1; /**> Clockwise Counter Clockwise operation (default: 0b0 = CW) */
+    struct
+    {
+        uint16_t Md:2; /**> Incremental mode (default: 0b00 = quadrature) */
+        uint16_t Div:2; /**> Incremental resolution (default: 0b00 = 10-bit */
+        uint16_t Indx:1; /**> Index bit witsh (default: 0b0 = 1LSB) */
+        uint16_t Zero:10; /**> Zero position (default: 0 [counts]) */
+        uint16_t CCW:1; /**> Clockwise Counter Clockwise operation (default: 0b0 = CW) */
+    } bit;
 };
 
 #endif

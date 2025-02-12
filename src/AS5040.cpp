@@ -33,7 +33,7 @@ enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs)
     return rc;
 }
 
-enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs, struct AS5040_OTP otp)
+enum AS5040_RC AS5040Class::begin(SPIClass *pSPI, SPISettings SPIs, union AS5040_OTP otp)
 {
     enum AS5040_RC rc = AS5040_OK; /* return command */
 
@@ -84,7 +84,7 @@ float AS5040Class::readAbsolutePosition(void)
     return angle;
 }
 
-enum AS5040_RC AS5040Class::nonPermanentProgram(struct AS5040_OTP otp_val)
+enum AS5040_RC AS5040Class::nonPermanentProgram(union AS5040_OTP otp_val)
 {
     enum AS5040_RC rc = AS5040_OK;
 

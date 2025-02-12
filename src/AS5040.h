@@ -22,7 +22,7 @@ public:
      * 
      * /param [in] *pSPI Pointer to an Arduino SPI SPIClass instance
      * /param [in] *SPIs copy an Arduino SPI SPISettings instance.
-     * /param [in] otp AS5040_OTP copy.
+     * /param [in] otp uinion AS5040_OTP copy with config values.
      *
      * Pick your own flavor. begin(void) will use Arduino SPI and SPISettings by
      * default for AS5040. If you want to have control of the SPI instance and
@@ -38,7 +38,7 @@ public:
      */
     enum AS5040_RC begin(void);
     enum AS5040_RC begin(SPIClass *pSPI, SPISettings SPIs);
-    enum AS5040_RC begin(SPIClass *pSPI, SPISettings SPIs, struct AS5040_OTP otp);
+    enum AS5040_RC begin(SPIClass *pSPI, SPISettings SPIs, union AS5040_OTP otp);
 
     /**
      * /brief AS5040 SPI pins definition
@@ -74,7 +74,7 @@ public:
     /** 
      * /brief program non permanent memory
      *
-     * /param [in] otp_val struct AS5040_OTP with the desired configuration.
+     * /param [in] otp_val union AS5040_OTP with the desired configuration.
      *
      * The AS5040 can operated without programming with the following
      * configuration:
@@ -86,7 +86,7 @@ public:
      *
      * /return AS5040_OK on success, AS5040_FAIL on failure.
      */
-    enum AS5040_RC nonPermanentProgram(struct AS5040_OTP otp_val);
+    enum AS5040_RC nonPermanentProgram(union AS5040_OTP otp_val);
 
     /** 
      * /brief retrieve last status message
